@@ -1,0 +1,39 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="card border-success m-0 d-flex flex-column min-vh-100" name="viewport" content="width=device-width" data-bs-theme="dark">
+  <div class="card-header bg-transparent border-success m-0 p-0">
+    {% include 'components/navbar.html' %}
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong>{{ message }}</strong>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+      {% endfor %}
+    {% endif %}
+  </div>
+  <div class="card-body text-success">
+    <h5 class="card-title">{{ page_title }}</h5>
+    <div class="container p-3 w-25">
+        <form action="#" method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="usernameID" class="form-label">Username</label>
+        <input type="text" name="username" id="usernameID" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="passwordID" class="form-label">Password</label>
+            <input type="password" name="password" id="passwordID" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-info text-light">Login</button>
+    </form>
+    </div>
+  </div>
+  {% block footer %}
+  <div class="card-footer bg-transparent border-success m-0 p-0">
+{% include 'components/footer.html' %}
+</div>
+{% endblock footer %}
+</div>
+{% endblock content %}
