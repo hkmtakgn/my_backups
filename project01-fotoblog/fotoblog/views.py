@@ -1,11 +1,13 @@
 from django.shortcuts import render,get_object_or_404,redirect
-from fotoblog.models import Page
-from forms.forms import PageForm
+from fotoblog.models import Page , Post
+from forms.forms import PageForm , PostForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login , logout
 from django.contrib.auth.models import User
+from django.utils.text import slugify
+from django.core.paginator import Paginator
 
 
 
@@ -17,6 +19,8 @@ def page_views (request,page_slug=None):
         return logout_views (request)
     if page_slug == "register":
         return register (request)
+    if page_slug == "post-share":
+        return post_share (request)
     if page_slug and not page_slug =="home":
         page = get_object_or_404 (Page,slug=page_slug,is_active=True)
         if page_slug == "add-page":
@@ -25,8 +29,14 @@ def page_views (request,page_slug=None):
             else:
                 return redirect ("fotoblog:home_views")
     elif page_slug == None or page_slug == "home":
+        p_posts = Post.objects.filter (is_active=True).order_by("-id")
+        set_posts = Paginator (p_posts,3)
+        page_number = request.GET.get ("page")
+        posts = set_posts.get_page(page_number)
         title = "Home"
         page = get_object_or_404 (Page,slug="home",is_active=True)
+        context = dict(posts=posts,page=page,)
+        return render (request,"pages/page-views.html",context)
     context = dict(
         page=page,
     )
@@ -97,3 +107,27 @@ def register (request):
     context = dict (page_title=title,)
     return render (request,"pages/register-page.html",context)
     
+
+
+def post_share (request):
+    if request.method == "POST":
+        post_form = PostForm (request.POST,request.FILES)
+        if post_form.is_valid ():
+            post_form.save(commit=False)
+            title = post_form.cleaned_data.get ("title")
+            slug = slugify (title)
+            post = Post.objects.filter (slug=slug).exists()
+            if post:
+                print (post_form)
+                messages.warning (request, "Post is already exists!")
+            else:
+                post_form.save()
+                messages.info (request,"Post is saved!")
+                return redirect ("fotoblog:home_views")
+    else:
+        post_form = PostForm ()
+            
+    context = dict (
+        post_form=post_form,
+    )
+    return render (request, "pages/post-share.html", context)

@@ -14,28 +14,15 @@
     {% endif %}
   </div>
   <div class="card-body text-success">
-    <h5 class="card-title">{{ page.title }}</h5>
-    {% if page_form %}
+    <h5 class="card-title">{{ page_title }}</h5>
     <div class="container p-3 w-75">
         <form action="#" method="post" enctype="multipart/form-data">
-        {% load crispy_forms_tags %}
+            {% load crispy_forms_tags %}
         {% csrf_token %}
-        {{ page_form|crispy }}
-        <button style="background-image: url('{{ page.img.url }}'); background-size: cover;" type="submit" class="btn btn-info text-light">Add</button>
+            {{ post_form|crispy }}
+        <button type="submit" class="btn btn-info text-light">Share</button>
     </form>
     </div>
-    {% elif page.slug == None or page.slug == 'home' %}
-      <div class="container p-3 w-75 d-flex justify-content-center flex-column">
-        {% if posts %}
-          {% include 'components/post-card.html' with posts=posts %}
-          {% include 'components/pagination.html' with posts=posts %}
-        {% else %}
-          <p class="text-muted">Henüz gönderi yok.</p>
-        {% endif %}
-      </div>
-    {% else %}
-    <p class="card-text">{{ page.content }}</p>
-    {% endif %}
   </div>
   {% block footer %}
   <div class="card-footer bg-transparent border-success m-0 p-0">
