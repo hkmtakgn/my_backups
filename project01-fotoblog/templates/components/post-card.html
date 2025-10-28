@@ -1,5 +1,6 @@
 {% for post in posts %}
             <div class="card mb-3 border-success text-center">
+              <div class="text-start"><small class="btn btn-primary m-1">{{ post.user }}</small></div>
               <div class="card-body text-light">
                 <div>
                     <h5 class="card-title">{{ post.title }}</h5>
@@ -7,7 +8,12 @@
                 </div>
                 <img src="{{ post.img.url }}" class="img-thumbnail w-75 mx-1 my-auto" style="max-height: 73vh;" alt="">
             </div>
-            <a href="{{ post.get_absolute_url }}" class="btn btn-outline-info btn-sm w-25 mx-auto my-1">Read more</a>
+            <div>
+              <a href="{{ post.get_absolute_url }}" class="btn btn-outline-info btn-sm w-25 mx-auto my-1">Read more</a>
+            {% if request.user.is_authenticated and request.user == post.user %}
+            <a href="{% url 'fotoblog:page_views' page_slug=page.slug post_slug=post.slug %}" class="btn btn-outline-info btn-sm w-25 mx-auto my-1">Edit</a>
+            {% endif %}
+            </div>
         </div>
           {% endfor %}
 

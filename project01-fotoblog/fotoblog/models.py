@@ -1,5 +1,6 @@
 from django.db import models
 from autoslug import AutoSlugField
+from django.contrib.auth.models import User
 
 
 class BaseModel (models.Model):
@@ -20,6 +21,7 @@ class Page (BaseModel):
     
 
 class Post (BaseModel):
+    user = models.ForeignKey (User,on_delete=models.CASCADE,blank=False,null=False)
     
     def __str__ (self):
         return self.title

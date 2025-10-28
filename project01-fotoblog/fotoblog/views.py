@@ -12,7 +12,9 @@ from django.core.paginator import Paginator
 
 
 
-def page_views (request,page_slug=None):
+def page_views (request,page_slug=None,post_slug=None):
+    if post_slug:
+        return post_share (request,post_slug) 
     if page_slug == "login":
         return login_views (request)
     if page_slug == "logout":
@@ -109,25 +111,39 @@ def register (request):
     
 
 
-def post_share (request):
+def post_share(request, post_slug=None):
+    post = None
+    if post_slug:
+        post = get_object_or_404(Post, slug=post_slug, is_active=True)
     if request.method == "POST":
-        post_form = PostForm (request.POST,request.FILES)
-        if post_form.is_valid ():
-            post_form.save(commit=False)
-            title = post_form.cleaned_data.get ("title")
-            slug = slugify (title)
-            post = Post.objects.filter (slug=slug).exists()
-            if post:
-                print (post_form)
-                messages.warning (request, "Post is already exists!")
+        if post:
+            post_form = PostForm(request.POST, request.FILES, instance=post)
+        else:
+            post_form = PostForm(request.POST, request.FILES)
+        if post_form.is_valid():
+            post_obj = post_form.save(commit=False)
+            title = post_form.cleaned_data.get("title")
+            slug = slugify(title)
+
+            if not post:
+                if Post.objects.filter(slug=slug).exists():
+                    messages.warning(request, "Post already exists!")
+                    return render(request, "pages/post-share.html", {"post_form": post_form})
             else:
-                post_form.save()
-                messages.info (request,"Post is saved!")
-                return redirect ("fotoblog:home_views")
+                if Post.objects.filter(slug=slug).exclude(id=post.id).exists():
+                    messages.warning(request, "Another post with this title already exists!")
+                    return render(request, "pages/post-share.html", {"post_form": post_form})
+
+            post_obj.slug = slug
+            post_obj.save()
+            if post:
+                messages.success(request, "Post updated successfully!")
+            else:
+                messages.success(request, "Post saved successfully!")
+            return redirect("fotoblog:home_views")
     else:
-        post_form = PostForm ()
-            
-    context = dict (
-        post_form=post_form,
-    )
-    return render (request, "pages/post-share.html", context)
+        post_form = PostForm(instance=post)
+
+    return render(request, "pages/post-share.html", {"post_form": post_form})
+
+
