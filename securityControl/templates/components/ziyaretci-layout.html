@@ -1,0 +1,36 @@
+
+<div class="row d-flex justify-content-around">
+  <div class="col-12 col-md-4 d-flex flex-column align-items-center">
+  <h3 class="text-center text-success mb-3">Ziyaretçi Kayıt</h3>
+    <div class="w-100">
+      
+        <form action="{% url 'sc:page-views' page_slug='ziyaretci' location=location %}" method="post" class="row flex-column mb-3 g-3">
+          {% load crispy_forms_tags %}
+          {% csrf_token %}
+          {{ ziyaretci_form|crispy }}
+          <button class="btn btn-outline-success w-25 mx-auto" type="submit">Kaydet</button>
+        </form>
+      
+    </div>
+  </div>
+
+
+  
+  <div class="col-12 col-md-7 d-flex flex-column align-items-center">
+    <h3 class="text-center text-success mb-3">Ziyaretçiler</h3>
+    <div class="w-100 p-3">
+      <ul class="list-group list-group-numbered overflow-auto" style="max-height:50vh;">
+        {% if ziyaretciler %}
+          {% for ziyaretci in ziyaretciler %}
+        <li class="list-group-item mb-1">{{ ziyaretci.first_name }} {{ ziyaretci.last_name }}</li>
+          {% endfor %}
+        {% else %}
+        <li class="list-group-item">Kayıt yok!</li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+
+  
+</div>
+

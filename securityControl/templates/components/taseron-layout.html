@@ -1,0 +1,57 @@
+
+<div class="row d-flex justify-content-around">
+  <div class="col-12 col-md-4 d-flex flex-column align-items-center">
+  <h3 class="text-center text-success mb-3">Taşeron Kayıt</h3>
+    <div class="w-100">
+
+      <button class="btn btn-outline-info mb-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">+Ziyaretçi Ekle</button>
+
+      <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Ziyaretçi Kayıt Formu</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          {% include 'components/ziyaretci-layout.html' with location=location %}
+        </div>
+      </div>
+
+        <form action="" method="post" class="row flex-column mb-3 g-3">
+          {% load crispy_forms_tags %}
+          {% csrf_token %}
+          
+          {{ taseron_form|crispy }}
+          
+          <button class="btn btn-outline-success w-25 mx-auto" type="submit">Kaydet</button>
+        </form>
+
+    </div>
+  </div>
+
+
+
+  <div class="col-12 col-md-7 d-flex flex-column align-items-center">
+    <h3 class="text-center text-success mb-3">Taşeronlar</h3>
+    <div class="w-100 p-3">
+      <ul class="list-group list-group-numbered overflow-auto" style="max-height:50vh;">
+        {% if taseronlar %}
+          {% for taseron in taseronlar %}
+        <li class="list-group-item mb-1">
+          <div>Firma : {{ taseron.firma_adi }}</div>
+          <div>Ad / Soyad : {{ taseron.ziyaretci.first_name }} {{ taseron.ziyaretci.last_name }}</div>
+          <div>Davet Eden : {{ taseron.davet_eden }}</div>
+          <div>Yapılacak İş : {{ taseron.yapilacak_is }}</div>
+          <div>Çalışma Alanı : {{ taseron.calisma_alani }}</div>
+          <div>Giriş Tarihi : {{ taseron.created_at }}</div>
+        </li>
+          {% endfor %}
+        {% else %}
+        <li class="list-group-item">Kayıt yok!</li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+
+
+</div>
+

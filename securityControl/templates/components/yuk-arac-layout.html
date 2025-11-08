@@ -1,0 +1,95 @@
+
+<div class="row d-flex justify-content-around">
+  <div class="col-12 col-md-4 d-flex flex-column align-items-center">
+  <h3 class="text-center text-success mb-3">Yük Araçları Kayıt</h3>
+    <div class="w-100">
+
+
+      <button class="btn btn-outline-info mb-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">+Şoför Ekle</button>
+
+      <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Şoför Kayıt Formu</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          {% include 'components/ziyaretci-layout.html' with location=location %}
+        </div>
+      </div>
+      
+
+        <form action="" method="post" class="row flex-column mb-3 g-3">
+          {% load crispy_forms_tags %}
+          {% csrf_token %}
+          {{ yuk_arac_form|crispy }}
+          <button class="btn btn-outline-success w-25 mx-auto" type="submit">Kaydet</button>
+        </form>
+
+    </div>
+  </div>
+
+
+
+  <div class="col-12 col-md-7 d-flex flex-column align-items-center">
+    <h3 class="text-center text-success mb-3">Yük Araçları</h3>
+    <div class="w-100 p-3">
+      <ul class="list-group list-group-numbered overflow-auto" style="max-height:80vh;">
+        {% if yuk_araclari %}
+          {% for yuk_araci in yuk_araclari %}
+        <li class="list-group-item mb-1"><div class="table-responsive">
+            <table class="table table-bordered table-sm mb-0">
+              <tbody>
+                <tr>
+                  <th>Şoför</th>
+                  <td>{{ yuk_araci.sofor.first_name }} {{ yuk_araci.sofor.last_name }}</td>
+                </tr>
+                <tr>
+                  <th>Çekici Plaka</th>
+                  <td>{{ yuk_araci.cekici_plaka }}</td>
+                </tr>
+                <tr>
+                  <th>Dorse Plaka</th>
+                  <td>{{ yuk_araci.dorse_plaka }}</td>
+                </tr>
+                <tr>
+                  <th>Firma Adı</th>
+                  <td>{{ yuk_araci.firma_adi }}</td>
+                </tr>
+                <tr>
+                  <th>Araç Türü</th>
+                  <td>{{ yuk_araci.arac_turu }}</td>
+                </tr>
+                <tr>
+                  <th>Sevkiyat Bölümü</th>
+                  <td>{{ yuk_araci.sevkiyat_bolumu }}</td>
+                </tr>
+                <tr>
+                  <th>Gideceği Yer</th>
+                  <td>{{ yuk_araci.gidecegi_yer }}</td>
+                </tr>
+                <tr>
+                  <th>İçeride mi?</th>
+                  <td>{{ yuk_araci.is_inside }}</td>
+                </tr>
+                <tr>
+                  <th>Oluşturulma</th>
+                  <td>{{ yuk_araci.created_at }}</td>
+                </tr>
+                <tr>
+                  <th>Güncellenme</th>
+                  <td>{{ yuk_araci.updated_at }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></li>
+          {% endfor %}
+        {% else %}
+        <li class="list-group-item">Kayıt yok!</li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+
+
+</div>
+

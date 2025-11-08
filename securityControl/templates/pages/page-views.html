@@ -1,0 +1,28 @@
+{% extends 'core/base.html' %}
+
+
+
+
+{% block content %}
+<div class="container border-success min-vh-100">
+    {% if page_slug == None %}
+        {% include 'components/home-layout.html' with location=page_slug %}
+    {% elif page_slug == "ziyaretci" %}
+        <div>
+            {% include 'components/ziyaretci-layout.html' with location=page_slug %}
+        </div>
+    {% elif page_slug == "taseron" %}
+        <div>
+            {% include 'components/taseron-layout.html' with location=page_slug %}
+        </div>
+    {% elif page_slug == "yuk-arac" %}
+        <div>
+            {% include 'components/yuk-arac-layout.html' with location=page_slug %}
+        </div>
+    {% else %}
+    <h1>{{ page_title }}</h1>
+    {% endif %}
+</div>
+{% include 'components/footer.html' %}
+{% endblock content %}
+
